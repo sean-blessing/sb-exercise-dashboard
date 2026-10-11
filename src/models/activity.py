@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-
 @dataclass
 class Activity:
     strava_id: int
@@ -21,4 +20,4 @@ class Activity:
     average_heartrate: float | None
     max_heartrate: float | None
     created_at: datetime | None
-    updated_at: datetime | Nonecd 
+    updated_at: datetime | None 
