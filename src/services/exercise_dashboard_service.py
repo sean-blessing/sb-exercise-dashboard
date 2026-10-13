@@ -1,6 +1,6 @@
 
 from datetime import date
-
+from collections import defaultdict
 from src.database.connection import get_connection
 from src.database.repositories.activity_repository import ActivityRepository
 from src.services.exercise_day_calculator import calculate_exercise_days
@@ -36,6 +36,26 @@ def get_exercise_dashboard_data(reference_date=None):
         exercise_days,
         reference_date,
     )
+    
+    current_month_miles = defaultdict(float)
+
+    for row in activity_rows:
+        start_date_local = row[7]
+        distance_meters = row[3]
+        activity_type = row[18]
+
+        if start_date_local is None or distance_meters is None:
+            continue
+
+        activity_date = start_date_local.date()
+
+        if (
+            activity_date.year == reference_date.year
+            and activity_date.month == reference_date.month
+        ):
+            current_month_miles[activity_type] += (
+                distance_meters / 1609.344
+            )
 
     # Return everything the dashboard needs.
     return {
@@ -46,4 +66,5 @@ def get_exercise_dashboard_data(reference_date=None):
         "monthly_counts": monthly_counts,
         "ytd_comparison": ytd_comparison,
         "reference_date": reference_date,
+        "current_month_miles": dict(sorted(current_month_miles.items())),
     }

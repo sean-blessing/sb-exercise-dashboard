@@ -56,6 +56,27 @@ with col3:
 
 st.divider()
 
+st.subheader("Current Month Stats")
+
+current_month_miles = dashboard_data["current_month_miles"]
+
+if current_month_miles:
+    activity_columns = st.columns(len(current_month_miles))
+
+    for column, (activity_type, miles) in zip(
+        activity_columns,
+        current_month_miles.items(),
+    ):
+        with column:
+            st.metric(
+                label=activity_type,
+                value=f"{miles:,.1f} mi",
+            )
+else:
+    st.info("No recorded activities for this month yet.")
+
+st.divider()
+
 st.subheader("Exercise Days by Year")
 
 yearly_counts = dashboard_data["yearly_counts"]
